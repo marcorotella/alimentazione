@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 Menu Settimanali per 2 Persone (Completi di Colazioni, Pranzi e Cene)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('nutriprep_theme') === 'dark' || (!('nutriprep_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Header Navigation -->
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-brand-500/20">
+                            🥗
+                        </div>
+                        <span class="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">Nutri<span class="text-brand-600">Prep</span></span>
+                    </a>
+                </div>
+                <nav class="flex items-center space-x-1 sm:space-x-3">
+                    <a href="index.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-house mr-1.5"></i>Home
+                    </a>
+                    <a href="menu.html" class="px-3 py-2 rounded-lg text-sm font-semibold bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
+                        <i class="fa-solid fa-calendar-week mr-1.5 text-emerald-600"></i>Menu Settimanali
+                    </a>
+                    <a href="spesa.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-cart-shopping mr-1.5 text-amber-500"></i>Spesa (2 Persone)
+                    </a>
+                    <a href="agenti.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-robot mr-1.5 text-indigo-500"></i>Agenti AI
+                    </a>
+                    <button onclick="toggleDarkMode()" aria-label="Cambia tema Dark/Light" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition ml-2">
+                        <i id="theme-toggle-icon" class="fa-solid fa-moon text-base"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- Header & Controls -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-md">Rotazione 3 Colazioni & 4 Settimane</span>
+                    <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">4 Menu Settimanali Completi</h1>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Colazioni (2 Dolci + 1 Salata a rotazione), Pranzi e Cene bilanciati per Persona A e Persona B.</p>
+                </div>
+
+                <!-- Person Selector Switcher -->
+                <div class="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <button onclick="setPerson('A')" id="person-btn-A" class="px-4 py-2 rounded-xl text-xs font-extrabold transition shadow-sm bg-emerald-600 text-white">
+                        👤 Persona A (~1.900 kcal)
+                    </button>
+                    <button onclick="setPerson('B')" id="person-btn-B" class="px-4 py-2 rounded-xl text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                        👤 Persona B (~1.550 kcal)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Week Selector Tabs -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button onclick="setWeek(1)" id="week-tab-1" class="week-tab p-3 rounded-2xl border text-left transition bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200 shadow-sm">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">Settimana 1</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Gusto Mediterraneo</span>
+                </button>
+                <button onclick="setWeek(2)" id="week-tab-2" class="week-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Settimana 2</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Erbe & Agrumi</span>
+                </button>
+                <button onclick="setWeek(3)" id="week-tab-3" class="week-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Settimana 3</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Fusion Fit</span>
+                </button>
+                <button onclick="setWeek(4)" id="week-tab-4" class="week-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Settimana 4</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Rustico & Gourmet</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Day Selector Tabs -->
+        <div class="bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto">
+            <div class="flex space-x-1 min-w-max">
+                <button onclick="setDay('lun')" id="tab-lun" class="day-tab px-4 py-2.5 rounded-xl font-bold text-sm transition flex items-center space-x-2 bg-brand-600 text-white shadow-md shadow-brand-500/20">
+                    <span>📅 Lunedì</span>
+                </button>
+                <button onclick="setDay('mar')" id="tab-mar" class="day-tab px-4 py-2.5 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center space-x-2">
+                    <span>📅 Martedì</span>
+                </button>
+                <button onclick="setDay('mer')" id="tab-mer" class="day-tab px-4 py-2.5 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center space-x-2">
+                    <span>📅 Mercoledì</span>
+                </button>
+                <button onclick="setDay('gio')" id="tab-gio" class="day-tab px-4 py-2.5 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center space-x-2">
+                    <span>📅 Giovedì</span>
+                </button>
+                <button onclick="setDay('ven')" id="tab-ven" class="day-tab px-4 py-2.5 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center space-x-2">
+                    <span>📅 Venerdì</span>
+                </button>
+                <button onclick="setDay('sab')" id="tab-sab" class="day-tab px-4 py-2.5 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center space-x-2">
+                    <span>🍕 Sabato</span>
+                </button>
+                <button onclick="setDay('dom')" id="tab-dom" class="day-tab px-4 py-2.5 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center space-x-2">
+                    <span>📅 Domenica</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Day Content Container -->
+        <div id="day-content-container" class="space-y-6">
+            <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Batch Cooking Section -->
+        <div class="bg-gradient-to-br from-slate-900 to-indigo-950 rounded-3xl p-6 sm:p-10 text-white shadow-2xl space-y-6 border border-white/10">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                <div>
+                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Regole di Porzionamento & Colazioni</span>
+                    <h2 class="text-2xl font-extrabold">Gestione Colazioni e Pasti</h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                    <span class="text-xs font-bold text-emerald-400 uppercase">🍨 Colazione 1: Yogurt & Frutta</span>
+                    <p class="text-xs text-slate-300">Yogurt Greco 0% + Crema Riso + Frutta fresca di stagione + Cioccolato 90% e cannella.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                    <span class="text-xs font-bold text-indigo-400 uppercase">🥞 Colazione 2: Protein Pancake</span>
+                    <p class="text-xs text-slate-300">Albume pastorizzato + Farina Riso/Avena + Marmellata Hero 0 zuccheri + Burro Ghee fuso.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                    <span class="text-xs font-bold text-amber-400 uppercase">🥪 Colazione 3: Toast Salato</span>
+                    <p class="text-xs text-slate-300">Pane Bauletto Riso tostato + Uova strapazzate con albume + Olio EVO / Ghee.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 dark:text-slate-400">
+            <p>NutriPrep System • Menu Completi per 2 Persone</p>
+        </div>
+    </footer>
+
+    <!-- Menu Engine Script -->
+    <script>
+        let currentWeek = 1;
+        let currentDay = 'lun';
+        let currentPerson = 'A';
+
+        const b1 = { tipo: "Colazione (Dolce)", titoloA: "Bowl Yogurt Greco, Frutta di Stagione e Cioccolato", titoloB: "Bowl Yogurt Greco, Frutta di Stagione e Cioccolato", descA: "300g Yogurt Greco 0% + 30g Crema di Riso + 150g Frutta Fresca di Stagione + 20g Cioccolato 90% + Cannella.", descB: "200g Yogurt Greco 0% + 20g Crema di Riso + 150g Frutta Fresca di Stagione + 10g Cioccolato 90% + Cannella." };
+        const b2 = { tipo: "Colazione (Dolce)", titoloA: "Fluffy Protein Pancake con Marmellata 0 Zuccheri e Ghee", titoloB: "Fluffy Protein Pancake con Marmellata 0 Zuccheri e Ghee", descA: "200g Albume d'Uovo + 40g Farina Riso/Avena + 20g Marmellata Hero 0 zuccheri + 20g Burro Ghee fuso.", descB: "150g Albume d'Uovo + 30g Farina Riso/Avena + 20g Marmellata Hero 0 zuccheri + 10g Burro Ghee fuso." };
+        const b3 = { tipo: "Colazione (Salata)", titoloA: "Toast Proteico Salato con Uova Strapazzate ed Olio EVO", titoloB: "Toast Proteico Salato con Uova Strapazzate ed Olio EVO", descA: "2 Fette Pane Bauletto Riso (40g) + 2 Uova intere strapazzate con 100g Albume + 10g Olio EVO/Ghee.", descB: "2 Fette Pane Bauletto Riso (40g) + 1 Uovo intero strapazzato con 80g Albume + 5g Olio EVO/Ghee." };
+
+        const weeksData = {
+            1: {
+                name: "Gusto Mediterraneo & Spezie",
+                days: {
+                    lun: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Chicken Tikka Masala Fit con Peperoni Arrostiti", titoloB: "Chicken Tikka Masala Fit con Peperoni Arrostiti", descA: "150g Petto di pollo marinato + 60g Riso Basmati + 150g Peperoni Arrostiti + 20g Olio EVO.", descB: "125g Petto di pollo marinato + 40g Riso Basmati + 150g Peperoni Arrostiti + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Tagliata di Diaframma alle Erbe con Patate e Broccoli", titoloB: "Tagliata di Diaframma alle Erbe con Patate e Broccoli", descA: "175g Diaframma vitello + 300g Patate al forno + 150g Broccoli al Vapore + 20g Olio EVO.", descB: "140g Diaframma vitello + 200g Patate al forno + 150g Broccoli al Vapore + 12g Olio EVO." }
+                        ]
+                    },
+                    mar: {
+                        pasti: [
+                            b2,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Salmone al Forno con Zucca al Rosmarino", titoloB: "Salmone al Forno con Zucca al Rosmarino", descA: "175g Salmone fresco + 60g Riso Basmati + 150g Zucca a Cubetti + 10g Olio EVO.", descB: "140g Salmone fresco + 40g Riso Basmati + 120g Zucca a Cubetti + 6g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Penne Saraceno al Sughetto di Merluzzo", titoloB: "Penne Saraceno al Sughetto di Merluzzo", descA: "210g Merluzzo stufato + 60g Penne saraceno + 150g Verdure Miste + 20g Olio EVO.", descB: "170g Filetto di Merluzzo/Nasello + 40g Penne saraceno + 150g Verdure Miste + 12g Olio EVO." }
+                        ]
+                    },
+                    mer: {
+                        pasti: [
+                            b3,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Polpettine di Tacchino con Polenta e Fagiolini", titoloB: "Polpettine di Tacchino con Polenta e Fagiolini", descA: "150g Tacchino macinato + 60g Polenta + 150g Fagiolini con Limone + 20g Olio EVO.", descB: "120g Tacchino macinato + 40g Polenta + 150g Fagiolini con Limone + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Bowl Fredda di Riso, Tonno e Zucchine Grigliate", titoloB: "Bowl Fredda di Riso, Tonno e Zucchine Grigliate", descA: "140g Tonno al naturale + 60g Riso Basmati + 150g Zucchine Grigliate + 20g Olio EVO.", descB: "110g Tonno al naturale + 40g Riso Basmati + 150g Zucchine Grigliate + 12g Olio EVO." }
+                        ]
+                    },
+                    gio: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Spiedini di Gamberi al Limone con Riso e Broccoli", titoloB: "Spiedini di Gamberi al Limone con Riso e Broccoli", descA: "210g Gamberi + 60g Riso Basmati + 150g Broccoli Saltati + 20g Olio EVO.", descB: "170g Gamberi + 40g Riso Basmati + 150g Broccoli Saltati + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Straccetti di Pollo al Curry con Patate e Peperoni", titoloB: "Straccetti di Pollo al Curry con Patate e Peperoni", descA: "150g Pollo al curry + 300g Patate al forno + 150g Peperoni + 20g Olio EVO.", descB: "125g Pollo al curry + 200g Patate al forno + 150g Peperoni + 12g Olio EVO." }
+                        ]
+                    },
+                    ven: {
+                        pasti: [
+                            b2,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Hamburger Magro con Patate e Zucca al Forno", titoloB: "Hamburger Magro con Patate e Zucca al Forno", descA: "115g Carne macinata magra + 300g Patate + 150g Zucca + 20g Olio EVO.", descB: "95g Carne macinata magra + 200g Patate + 120g Zucca + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Merluzzo in Crosta di Erbe con Riso e Fagiolini", titoloB: "Merluzzo in Crosta di Erbe con Riso e Fagiolini", descA: "210g Merluzzo al cartoccio + 60g Riso Basmati + 150g Fagiolini + 20g Olio EVO.", descB: "170g Merluzzo al cartoccio + 40g Riso Basmati + 150g Fagiolini + 12g Olio EVO." }
+                        ]
+                    },
+                    sab: {
+                        pasti: [
+                            b3,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Insalata Tiepida di Tonno, Patate e Verdure Miste", titoloB: "Insalata Tiepida di Tonno, Patate e Verdure Miste", descA: "140g Tonno al naturale + 250g Patate lesse + 150g Verdure Miste + 10g Olio EVO.", descB: "110g Tonno al naturale + 180g Patate lesse + 150g Verdure Miste + 6g Olio EVO." },
+                            { tipo: "Cena (Cheat Meal)", titoloA: "🍕 Pizza con Pomodoro e Mozzarella", titoloB: "🍕 Pizza con Pomodoro e Mozzarella", descA: "300g Pizza (Pasto libero di ricarica).", descB: "220g Pizza (Pasto libero di ricarica)." }
+                        ]
+                    },
+                    dom: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Penne Saraceno con Tacchino a Dadini e Broccoli", titoloB: "Penne Saraceno con Tacchino a Dadini e Broccoli", descA: "150g Tacchino + 50g Penne saraceno + 150g Broccoli + 20g Olio EVO.", descB: "125g Tacchino + 35g Penne saraceno + 150g Broccoli + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Merluzzo alla Griglia con Polenta e Zucchine", titoloB: "Merluzzo alla Griglia con Polenta e Zucchine", descA: "210g Merluzzo alla griglia + 60g Polenta + 150g Zucchine + 20g Olio EVO.", descB: "170g Merluzzo alla griglia + 40g Polenta + 150g Zucchine + 12g Olio EVO." }
+                        ]
+                    }
+                }
+            },
+            2: {
+                name: "Erbe Aromatiche & Profumi d'Agrumi",
+                days: {
+                    lun: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Pollo al Limone ed Erbe con Fagiolini", titoloB: "Pollo al Limone ed Erbe con Fagiolini", descA: "150g Pollo + 300g Patate + 150g Fagiolini + 20g Olio EVO.", descB: "125g Pollo + 200g Patate + 150g Fagiolini + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Merluzzo alla Piastra con Riso e Zucca al Forno", titoloB: "Merluzzo alla Piastra con Riso e Zucca al Forno", descA: "210g Merluzzo + 60g Riso Basmati + 150g Zucca + 20g Olio EVO.", descB: "170g Merluzzo + 40g Riso Basmati + 120g Zucca + 12g Olio EVO." }
+                        ]
+                    },
+                    mar: {
+                        pasti: [
+                            b2,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Trancio di Salmone alla Piastra con Broccoli", titoloB: "Trancio di Salmone alla Piastra con Broccoli", descA: "175g Salmone + 60g Polenta + 150g Broccoli + 10g Olio EVO.", descB: "140g Salmone + 40g Polenta + 150g Broccoli + 6g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Diaframma al Pepe Verde con Peperoni Arrostiti", titoloB: "Diaframma al Pepe Verde con Peperoni Arrostiti", descA: "175g Diaframma + 300g Patate + 150g Peperoni + 20g Olio EVO.", descB: "140g Diaframma + 200g Patate + 150g Peperoni + 12g Olio EVO." }
+                        ]
+                    },
+                    mer: {
+                        pasti: [
+                            b3,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Straccetti di Tacchino con Verdure Miste", titoloB: "Straccetti di Tacchino con Verdure Miste", descA: "150g Tacchino + 60g Riso Basmati + 150g Verdure Miste + 20g Olio EVO.", descB: "125g Tacchino + 40g Riso Basmati + 150g Verdure Miste + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Merluzzo al Vapore ed Olio all'Aglio con Penne", titoloB: "Merluzzo al Vapore ed Olio all'Aglio con Penne", descA: "210g Merluzzo + 60g Penne saraceno + 150g Zucchine + 20g Olio EVO.", descB: "170g Merluzzo + 40g Penne saraceno + 150g Zucchine + 12g Olio EVO." }
+                        ]
+                    },
+                    gio: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Gamberi al Wok con Zucca a Cubetti", titoloB: "Gamberi al Wok con Zucca a Cubetti", descA: "210g Gamberi + 60g Riso Basmati + 150g Zucca + 20g Olio EVO.", descB: "170g Gamberi + 40g Riso Basmati + 120g Zucca + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Hamburger di Tacchino con Broccoli Ripassati", titoloB: "Hamburger di Tacchino con Broccoli Ripassati", descA: "115g Tacchino macinato + 60g Polenta + 150g Broccoli + 20g Olio EVO.", descB: "95g Tacchino macinato + 40g Polenta + 150g Broccoli + 12g Olio EVO." }
+                        ]
+                    },
+                    ven: {
+                        pasti: [
+                            b2,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Bocconcini di Pollo con Peperoni a Falde", titoloB: "Bocconcini di Pollo con Peperoni a Falde", descA: "150g Pollo + 300g Patate + 150g Peperoni + 20g Olio EVO.", descB: "125g Pollo + 200g Patate + 150g Peperoni + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Bowl Fredda di Tonno, Riso e Fagiolini", titoloB: "Bowl Fredda di Tonno, Riso e Fagiolini", descA: "140g Tonno + 60g Riso Basmati + 150g Fagiolini + 20g Olio EVO.", descB: "110g Tonno + 40g Riso Basmati + 150g Fagiolini + 12g Olio EVO." }
+                        ]
+                    },
+                    sab: {
+                        pasti: [
+                            b3,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Insalata di Tonno con Patate e Verdure Miste", titoloB: "Insalata di Tonno con Patate e Verdure Miste", descA: "140g Tonno al naturale + 250g Patate + 150g Verdure Miste + 10g Olio EVO.", descB: "110g Tonno al naturale + 180g Patate + 150g Verdure Miste + 6g Olio EVO." },
+                            { tipo: "Cena (Cheat Meal)", titoloA: "🍕 Pizza con Pomodoro e Mozzarella", titoloB: "🍕 Pizza con Pomodoro e Mozzarella", descA: "300g Pizza libera.", descB: "220g Pizza libera." }
+                        ]
+                    },
+                    dom: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Penne Saraceno con Merluzzo e Broccoli", titoloB: "Penne Saraceno con Merluzzo e Broccoli", descA: "210g Merluzzo + 50g Penne saraceno + 150g Broccoli + 20g Olio EVO.", descB: "170g Merluzzo + 35g Penne saraceno + 150g Broccoli + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Diaframma alla Piastra con Zucchine Grigliate", titoloB: "Diaframma alla Piastra con Zucchine Grigliate", descA: "175g Diaframma + 300g Patate + 150g Zucchine + 20g Olio EVO.", descB: "140g Diaframma + 200g Patate + 150g Zucchine + 12g Olio EVO." }
+                        ]
+                    }
+                }
+            },
+            3: {
+                name: "Fusion Fit & Sapori Intensi",
+                days: {
+                    lun: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Bocconcini di Pollo Teriyaki con Broccoli", titoloB: "Bocconcini di Pollo Teriyaki con Broccoli", descA: "150g Pollo teriyaki + 60g Riso Basmati + 150g Broccoli + 20g Olio EVO.", descB: "125g Pollo teriyaki + 40g Riso Basmati + 150g Broccoli + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Tagliata di Manzo con Zucca al Forno", titoloB: "Tagliata di Manzo con Zucca al Forno", descA: "175g Diaframma + 300g Patate + 150g Zucca + 20g Olio EVO.", descB: "140g Diaframma + 200g Patate + 120g Zucca + 12g Olio EVO." }
+                        ]
+                    },
+                    mar: {
+                        pasti: [
+                            b2,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Gamberi al Lime con Zucchine Spadellate", titoloB: "Gamberi al Lime con Zucchine Spadellate", descA: "210g Gamberi + 60g Riso Basmati + 150g Zucchine + 20g Olio EVO.", descB: "170g Gamberi + 40g Riso Basmati + 150g Zucchine + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Salmone al Cartoccio con Peperoni", titoloB: "Salmone al Cartoccio con Peperoni", descA: "175g Salmone + 300g Patate + 150g Peperoni + 10g Olio EVO.", descB: "140g Salmone + 200g Patate + 150g Peperoni + 6g Olio EVO." }
+                        ]
+                    },
+                    mer: {
+                        pasti: [
+                            b3,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Polpettine alle Spezie con Verdure Miste", titoloB: "Polpettine alle Spezie con Verdure Miste", descA: "150g Macinato + 60g Polenta + 150g Verdure Miste + 20g Olio EVO.", descB: "120g Macinato + 40g Polenta + 150g Verdure Miste + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Risotto Basmati con Gamberi & Merluzzo", titoloB: "Risotto Basmati con Gamberi & Merluzzo", descA: "120g Gamberi + 120g Merluzzo + 60g Riso + 150g Fagiolini + 20g Olio EVO.", descB: "90g Gamberi + 80g Merluzzo + 40g Riso + 150g Fagiolini + 12g Olio EVO." }
+                        ]
+                    },
+                    gio: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Straccetti di Pollo con Zucca e Curry", titoloB: "Straccetti di Pollo con Zucca e Curry", descA: "150g Pollo curry + 60g Riso Basmati + 150g Zucca + 20g Olio EVO.", descB: "125g Pollo curry + 40g Riso Basmati + 120g Zucca + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Merluzzo Gratinato con Broccoli", titoloB: "Merluzzo Gratinato con Broccoli", descA: "210g Merluzzo + 300g Patate + 150g Broccoli + 20g Olio EVO.", descB: "170g Merluzzo + 200g Patate + 150g Broccoli + 12g Olio EVO." }
+                        ]
+                    },
+                    ven: {
+                        pasti: [
+                            b2,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Hamburger Magro con Peperoni Arrostiti", titoloB: "Hamburger Magro con Peperoni Arrostiti", descA: "115g Carne magra + 60g Polenta + 150g Peperoni + 20g Olio EVO.", descB: "95g Carne magra + 40g Polenta + 150g Peperoni + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Merluzzo in Umido con Pomodorini e Riso", titoloB: "Merluzzo in Umido con Pomodorini e Riso", descA: "210g Merluzzo umido + 60g Riso Basmati + 150g Fagiolini + 20g Olio EVO.", descB: "170g Merluzzo umido + 40g Riso Basmati + 150g Fagiolini + 12g Olio EVO." }
+                        ]
+                    },
+                    sab: {
+                        pasti: [
+                            b3,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Insalata Fredda di Tonno, Patate e Zucchine", titoloB: "Insalata Fredda di Tonno, Patate e Zucchine", descA: "140g Tonno al naturale + 250g Patate + 150g Zucchine + 10g Olio EVO.", descB: "110g Tonno al naturale + 180g Patate + 150g Zucchine + 6g Olio EVO." },
+                            { tipo: "Cena (Cheat Meal)", titoloA: "🍕 Pizza con Pomodoro e Mozzarella", titoloB: "🍕 Pizza con Pomodoro e Mozzarella", descA: "300g Pizza libera.", descB: "220g Pizza libera." }
+                        ]
+                    },
+                    dom: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Penne Saraceno con Tacchino e Verdure Miste", titoloB: "Penne Saraceno con Tacchino e Verdure Miste", descA: "150g Tacchino + 50g Penne saraceno + 150g Verdure Miste + 20g Olio EVO.", descB: "125g Tacchino + 35g Penne saraceno + 150g Verdure Miste + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Salmone al Forno con Zucca", titoloB: "Salmone al Forno con Zucca", descA: "175g Salmone + 300g Patate + 150g Zucca + 10g Olio EVO.", descB: "140g Salmone + 200g Patate + 120g Zucca + 6g Olio EVO." }
+                        ]
+                    }
+                }
+            },
+            4: {
+                name: "Rustico & Gourmet Fit",
+                days: {
+                    lun: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Pollo ai Pomodorini, Origano e Timo", titoloB: "Pollo ai Pomodorini, Origano e Timo", descA: "150g Pollo ai pomodorini + 60g Riso Basmati + 150g Fagiolini + 20g Olio EVO.", descB: "125g Pollo ai pomodorini + 40g Riso Basmati + 150g Fagiolini + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Diaframma all'Aceto Balsamico con Zucca", titoloB: "Diaframma all'Aceto Balsamico con Zucca", descA: "175g Diaframma + 300g Patate + 150g Zucca + 20g Olio EVO.", descB: "140g Diaframma + 200g Patate + 120g Zucca + 12g Olio EVO." }
+                        ]
+                    },
+                    mar: {
+                        pasti: [
+                            b2,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Merluzzo in Crosta di Mandorle e Peperoni", titoloB: "Merluzzo in Crosta di Mandorle e Peperoni", descA: "210g Merluzzo + 60g Riso Basmati + 150g Peperoni + 20g Olio EVO.", descB: "170g Merluzzo + 40g Riso Basmati + 150g Peperoni + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Merluzzo ed Ortaggi al Forno con Broccoli", titoloB: "Merluzzo ed Ortaggi al Forno con Broccoli", descA: "210g Merluzzo + 60g Polenta + 150g Broccoli + 20g Olio EVO.", descB: "170g Merluzzo + 40g Polenta + 150g Broccoli + 12g Olio EVO." }
+                        ]
+                    },
+                    mer: {
+                        pasti: [
+                            b3,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Polpettine di Tacchino con Verdure Miste", titoloB: "Polpettine di Tacchino con Verdure Miste", descA: "150g Macinato + 300g Patate + 150g Verdure Miste + 20g Olio EVO.", descB: "120g Macinato + 200g Patate + 150g Verdure Miste + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Salmone Grigliato con Zucchine", titoloB: "Salmone Grigliato con Zucchine", descA: "175g Salmone + 60g Riso Basmati + 150g Zucchine + 10g Olio EVO.", descB: "140g Salmone + 40g Riso Basmati + 150g Zucchine + 6g Olio EVO." }
+                        ]
+                    },
+                    gio: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Spiedini di Gamberi con Zucca a Cubetti", titoloB: "Spiedini di Gamberi con Zucca a Cubetti", descA: "210g Gamberi + 60g Polenta + 150g Zucca + 20g Olio EVO.", descB: "170g Gamberi + 40g Polenta + 120g Zucca + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Straccetti di Pollo alla Paprika con Fagiolini", titoloB: "Straccetti di Pollo alla Paprika con Fagiolini", descA: "150g Pollo + 300g Patate + 150g Fagiolini + 20g Olio EVO.", descB: "125g Pollo + 200g Patate + 150g Fagiolini + 12g Olio EVO." }
+                        ]
+                    },
+                    ven: {
+                        pasti: [
+                            b2,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Hamburger Magro con Broccoli al Vapore", titoloB: "Hamburger Magro con Broccoli al Vapore", descA: "115g Carne magra + 60g Riso Basmati + 150g Broccoli + 20g Olio EVO.", descB: "95g Carne magra + 40g Riso Basmati + 150g Broccoli + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Penne Saraceno al Sughetto di Merluzzo", titoloB: "Penne Saraceno al Sughetto di Merluzzo", descA: "60g Penne saraceno + 210g Merluzzo + 150g Peperoni + 20g Olio EVO.", descB: "40g Penne saraceno + 170g Merluzzo + 150g Peperoni + 12g Olio EVO." }
+                        ]
+                    },
+                    sab: {
+                        pasti: [
+                            b3,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Insalata Tiepida di Tonno e Verdure Miste", titoloB: "Insalata Tiepida di Tonno e Verdure Miste", descA: "140g Tonno al naturale + 250g Patate + 150g Verdure Miste + 10g Olio EVO.", descB: "110g Tonno al naturale + 180g Patate + 150g Verdure Miste + 6g Olio EVO." },
+                            { tipo: "Cena (Cheat Meal)", titoloA: "🍕 Pizza con Pomodoro e Mozzarella", titoloB: "🍕 Pizza con Pomodoro e Mozzarella", descA: "300g Pizza libera.", descB: "220g Pizza libera." }
+                        ]
+                    },
+                    dom: {
+                        pasti: [
+                            b1,
+                            { tipo: "Pranzo (Meal Prep)", titoloA: "Bocconcini di Tacchino con Zucchine", titoloB: "Bocconcini di Tacchino con Zucchine", descA: "150g Tacchino + 60g Polenta + 150g Zucchine + 20g Olio EVO.", descB: "125g Tacchino + 40g Polenta + 150g Zucchine + 12g Olio EVO." },
+                            { tipo: "Cena (Meal Prep)", titoloA: "Merluzzo al Cartoccio con Zucca al Forno", titoloB: "Merluzzo al Cartoccio con Zucca al Forno", descA: "210g Merluzzo + 300g Patate + 150g Zucca + 20g Olio EVO.", descB: "170g Merluzzo + 200g Patate + 120g Zucca + 12g Olio EVO." }
+                        ]
+                    }
+                }
+            }
+        };
+
+        function setWeek(w) {
+            currentWeek = w;
+            for(let i=1; i<=4; i++) {
+                const btn = document.getElementById('week-tab-' + i);
+                if (i === w) {
+                    btn.className = "week-tab p-3 rounded-2xl border text-left transition bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200 shadow-sm";
+                } else {
+                    btn.className = "week-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50";
+                }
+            }
+            renderDayContent();
+        }
+
+        function setDay(d) {
+            currentDay = d;
+            document.querySelectorAll('.day-tab').forEach(btn => {
+                btn.className = "day-tab px-4 py-2.5 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center space-x-2";
+            });
+            const activeTab = document.getElementById('tab-' + d);
+            if (activeTab) {
+                activeTab.className = "day-tab px-4 py-2.5 rounded-xl font-bold text-sm transition flex items-center space-x-2 bg-brand-600 text-white shadow-md shadow-brand-500/20";
+            }
+            renderDayContent();
+        }
+
+        function setPerson(p) {
+            currentPerson = p;
+            const btnA = document.getElementById('person-btn-A');
+            const btnB = document.getElementById('person-btn-B');
+            if (p === 'A') {
+                btnA.className = "px-4 py-2 rounded-xl text-xs font-extrabold transition shadow-sm bg-emerald-600 text-white";
+                btnB.className = "px-4 py-2 rounded-xl text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white";
+            } else {
+                btnB.className = "px-4 py-2 rounded-xl text-xs font-extrabold transition shadow-sm bg-indigo-600 text-white";
+                btnA.className = "px-4 py-2 rounded-xl text-xs font-extrabold transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white";
+            }
+            renderDayContent();
+        }
+
+        function renderDayContent() {
+            const week = weeksData[currentWeek];
+            const dayObj = week.days[currentDay] || week.days['lun'];
+            const container = document.getElementById('day-content-container');
+
+            let html = `
+                <div class="flex items-center justify-between bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Settimana ${currentWeek}: ${week.name}</span>
+                        <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white capitalize">${currentDay}</h2>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-slate-400 font-semibold block">Visualizzazione Porzioni</span>
+                        <span class="text-base font-black ${currentPerson === 'A' ? 'text-emerald-600 dark:text-emerald-400' : 'text-indigo-600 dark:text-indigo-400'}">Persona ${currentPerson}</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            `;
+
+            dayObj.pasti.forEach(pasto => {
+                const titolo = pasto.titolo || (currentPerson === 'A' ? pasto.titoloA : pasto.titoloB);
+                const desc = currentPerson === 'A' ? pasto.descA : pasto.descB;
+
+                html += `
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 uppercase">${pasto.tipo}</span>
+                                <span class="text-xs font-bold px-2 py-0.5 rounded-full ${currentPerson === 'A' ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300' : 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300'}">
+                                    Porzione ${currentPerson}
+                                </span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-base leading-snug mb-2">${titolo}</h4>
+                            <p class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">${desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('nutriprep_theme', 'light');
+                updateToggleIcon(false);
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('nutriprep_theme', 'dark');
+                updateToggleIcon(true);
+            }
+        }
+
+        function updateToggleIcon(isDark) {
+            const icon = document.getElementById('theme-toggle-icon');
+            if (icon) {
+                if (isDark) {
+                    icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                } else {
+                    icon.className = 'fa-solid fa-moon text-slate-600 text-base';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateToggleIcon(document.documentElement.classList.contains('dark'));
+            const urlParams = new URLSearchParams(window.location.search);
+            const w = parseInt(urlParams.get('week'));
+            if (w >= 1 && w <= 4) {
+                setWeek(w);
+            } else {
+                setWeek(1);
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Spesa Intelligente per 2 Persone (Dinamica per Settimana)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('nutriprep_theme') === 'dark' || (!('nutriprep_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Header Navigation -->
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-brand-500/20">
+                            🥗
+                        </div>
+                        <span class="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">Nutri<span class="text-brand-600">Prep</span></span>
+                    </a>
+                </div>
+                <nav class="flex items-center space-x-1 sm:space-x-3">
+                    <a href="index.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-house mr-1.5"></i>Home
+                    </a>
+                    <a href="menu.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-calendar-week mr-1.5 text-emerald-500"></i>Menu Settimanali
+                    </a>
+                    <a href="spesa.html" class="px-3 py-2 rounded-lg text-sm font-semibold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+                        <i class="fa-solid fa-cart-shopping mr-1.5 text-amber-600"></i>Spesa (2 Persone)
+                    </a>
+                    <a href="agenti.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-robot mr-1.5 text-indigo-500"></i>Agenti AI
+                    </a>
+                    <button onclick="toggleDarkMode()" aria-label="Cambia tema Dark/Light" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition ml-2">
+                        <i id="theme-toggle-icon" class="fa-solid fa-moon text-base"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- Header & Controls -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 px-2.5 py-1 rounded-md">Spesa Settimanale per 2 Persone (7 Giorni)</span>
+                    <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">La tua Spesa al Supermercato</h1>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Seleziona la settimana in alto: gli ingredienti freschi specifici del menu appariranno subito in cima alla lista!</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="resetShoppingList()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Resetta Spunte
+                    </button>
+                </div>
+            </div>
+
+            <!-- Week Selector Switcher -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button onclick="setWeek(1)" id="week-tab-1" class="week-tab p-3 rounded-2xl border text-left transition bg-amber-50 dark:bg-amber-950/40 border-amber-500 text-amber-900 dark:text-amber-200 shadow-sm">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-600 dark:text-amber-400 block">Spesa Settimana 1</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Gusto Mediterraneo</span>
+                </button>
+                <button onclick="setWeek(2)" id="week-tab-2" class="week-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Spesa Settimana 2</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Erbe & Agrumi</span>
+                </button>
+                <button onclick="setWeek(3)" id="week-tab-3" class="week-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Spesa Settimana 3</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Fusion Fit</span>
+                </button>
+                <button onclick="setWeek(4)" id="week-tab-4" class="week-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Spesa Settimana 4</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Rustico & Gourmet</span>
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="space-y-2 pt-2">
+                <div class="flex justify-between text-xs font-bold">
+                    <span class="text-slate-600 dark:text-slate-400">Carrello Settimana <span id="current-week-num">1</span> (2 Persone):</span>
+                    <span id="progress-text" class="text-amber-600 dark:text-amber-400">0 / 0 Acquistati (0%)</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
+                    <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-emerald-500 h-3 rounded-full transition-all duration-300 w-0"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="flex space-x-2 overflow-x-auto pb-2">
+            <button onclick="filterDept('all')" id="btn-all" class="dept-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 transition shadow-sm">Tutti i Reparti</button>
+            <button onclick="filterDept('ortofrutta')" id="btn-ortofrutta" class="dept-btn px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">🥦 Ortofrutta</button>
+            <button onclick="filterDept('macelleria')" id="btn-macelleria" class="dept-btn px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">🥩 Macelleria & Affettati</button>
+            <button onclick="filterDept('pescheria')" id="btn-pescheria" class="dept-btn px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">🐟 Pescheria</button>
+            <button onclick="filterDept('freschi')" id="btn-freschi" class="dept-btn px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">🥛 Freschi & Latticini</button>
+            <button onclick="filterDept('dispensa')" id="btn-dispensa" class="dept-btn px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">📦 Dispensa & Seccame</button>
+            <button onclick="filterDept('condimenti')" id="btn-condimenti" class="dept-btn px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">🧂 Spezie & Condimenti</button>
+        </div>
+
+        <!-- Current Week Banner Notification -->
+        <div id="week-banner" class="bg-gradient-to-r from-amber-500 to-emerald-600 text-white p-4 rounded-2xl flex items-center justify-between shadow-md">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl font-bold">
+                    🛒
+                </div>
+                <div>
+                    <h3 id="banner-title" class="font-extrabold text-base leading-tight">Lista Spesa per la Settimana 1 (Gusto Mediterraneo)</h3>
+                    <p class="text-xs text-amber-100 mt-0.5">Ingredienti freschi specifici del menu in cima, seguiti dalla dispensa base.</p>
+                </div>
+            </div>
+            <span class="text-xs font-black bg-white/20 px-3 py-1.5 rounded-full border border-white/30">2 Persone</span>
+        </div>
+
+        <!-- Shopping List Items Container -->
+        <div id="shopping-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Items rendered via JavaScript -->
+        </div>
+
+        <!-- INCI Guide Section -->
+        <div id="inci-guide" class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-md">Analisi della Qualità</span>
+                <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">🔍 Guida alla Lettura delle Etichette (INCI Food)</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">Controlla gli ingredienti al supermercato ed evita insidie e conservanti indesiderati.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Yogurt Greco -->
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">🥛</span>
+                        <h4 class="font-bold text-slate-900 dark:text-white">Yogurt Greco 0% Senza Lattosio</h4>
+                    </div>
+                    <div class="text-xs space-y-1.5">
+                        <p class="text-emerald-700 dark:text-emerald-400 font-semibold"><i class="fa-solid fa-circle-check mr-1"></i> COSA CERCARE: Solo <em>latte scremato, fermenti lattici, lattasi</em>. Proteine &ge; 9g/100g.</p>
+                        <p class="text-rose-600 dark:text-rose-400 font-semibold"><i class="fa-solid fa-circle-xmark mr-1"></i> COSA EVITARE: Amidi modificati, pectina, zuccheri/sciroppi di glucosio aggiunti.</p>
+                    </div>
+                </div>
+
+                <!-- Affettato Tacchino -->
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">🥩</span>
+                        <h4 class="font-bold text-slate-900 dark:text-white">Fesa di Tacchino al Forno</h4>
+                    </div>
+                    <div class="text-xs space-y-1.5">
+                        <p class="text-emerald-700 dark:text-emerald-400 font-semibold"><i class="fa-solid fa-circle-check mr-1"></i> COSA CERCARE: Carne di tacchino &ge; 85-90%, dicitura "Senza Nitriti aggiunti".</p>
+                        <p class="text-rose-600 dark:text-rose-400 font-semibold"><i class="fa-solid fa-circle-xmark mr-1"></i> COSA EVITARE: Conservanti Nitriti (E250, E252) e Polifosfati (E450, E452).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 dark:text-slate-400">
+            <p>NutriPrep System • Spesa Settimanale Dinamica per 2 Persone</p>
+        </div>
+    </footer>
+
+    <!-- Shopping List Engine Script -->
+    <script>
+        let currentWeek = 1;
+        let currentFilter = 'all';
+        let checkedState = {};
+
+        const weekNames = {
+            1: "Gusto Mediterraneo & Spezie",
+            2: "Erbe Aromatiche & Agrumi",
+            3: "Fusion Fit & Sapori Intensi",
+            4: "Rustico & Gourmet Fit"
+        };
+
+        const weekSpecificItems = {
+            1: [
+                { id: "w1-1", dept: "macelleria", name: "Petto di Pollo intero", qty: "600g (2 Persone)", note: "Per Chicken Tikka Masala e Straccetti curry", isSpecific: true },
+                { id: "w1-2", dept: "macelleria", name: "Diaframma di Vitello", qty: "350g (2 Persone)", note: "Per Tagliata di Diaframma alle erbe", isSpecific: true },
+                { id: "w1-3", dept: "macelleria", name: "Fesa di Tacchino macinata", qty: "300g macinato fresco", note: "Per Polpettine magre di tacchino", isSpecific: true },
+                { id: "w1-4", dept: "macelleria", name: "Carne Macinata Magra", qty: "2 Hamburger magri (250g)", note: "Per Hamburger alla paprika", isSpecific: true },
+                { id: "w1-5", dept: "pescheria", name: "Salmone fresco (Filetti)", qty: "350g (2 Tranci)", note: "Per Salmone al forno all'aneto", isSpecific: true },
+                { id: "w1-8", dept: "pescheria", name: "Merluzzo / Nasello (Filetti)", qty: "1.200g (1,2 kg)", note: "Per Penne al sughetto, Merluzzo in crosta e Griglia polenta", isSpecific: true },
+                { id: "w1-9", dept: "dispensa", name: "Tonno al naturale", qty: "8 Scatolette (640g lordo)", note: "Per Bowl tonno e Insalata tiepida tonno", isSpecific: true },
+                { id: "w1-10", dept: "condimenti", name: "Gamberi surgelati sgusciati", qty: "1 Busta da 500g", note: "Per Spiedini di gamberi al limone", isSpecific: true },
+                { id: "w1-11", dept: "ortofrutta", name: "Peperoni (Gialli / Rossi)", qty: "800g (1 kg sfusi)", note: "Per Chicken Tikka e Straccetti curry", isSpecific: true },
+                { id: "w1-12", dept: "ortofrutta", name: "Broccoli freschi", qty: "800g (2 Teste)", note: "Per Tagliata e Spiedini gamberi", isSpecific: true },
+                { id: "w1-13", dept: "ortofrutta", name: "Zucca (Delica / Mantovana)", qty: "800g (1 Zucca)", note: "Per Salmone e Hamburger", isSpecific: true },
+                { id: "w1-14", dept: "ortofrutta", name: "Verdure Miste (Melanzane, Pomodorini)", qty: "600g", note: "Per Sughetto merluzzo ed Insalata tonno", isSpecific: true },
+                { id: "w1-15", dept: "ortofrutta", name: "Fagiolini freschi", qty: "600g", note: "Per Polpettine tacchino e Merluzzo crosta", isSpecific: true }
+            ],
+            2: [
+                { id: "w2-1", dept: "macelleria", name: "Petto di Pollo intero", qty: "600g (2 Persone)", note: "Per Pollo al limone ed erbe", isSpecific: true },
+                { id: "w2-2", dept: "macelleria", name: "Diaframma di Vitello", qty: "350g (2 Persone)", note: "Per Diaframma al pepe verde", isSpecific: true },
+                { id: "w2-3", dept: "macelleria", name: "Fesa di Tacchino fresca", qty: "300g in bocconcini", note: "Per Straccetti tacchino alla paprika", isSpecific: true },
+                { id: "w2-4", dept: "macelleria", name: "Tacchino macinato magro", qty: "250g macinato", note: "Per Hamburger di tacchino", isSpecific: true },
+                { id: "w2-5", dept: "pescheria", name: "Salmone fresco (Filetti)", qty: "350g (2 Tranci)", note: "Per Salmone alla piastra", isSpecific: true },
+                { id: "w2-8", dept: "pescheria", name: "Merluzzo / Nasello (Filetti)", qty: "1.200g (1,2 kg)", note: "Per Merluzzo piastra riso, Merluzzo vapore e Penne broccoli", isSpecific: true },
+                { id: "w2-9", dept: "dispensa", name: "Tonno al naturale", qty: "8 Scatolette (640g lordo)", note: "Per Bowl tonno e Insalata di tonno e patate", isSpecific: true },
+                { id: "w2-10", dept: "condimenti", name: "Gamberi surgelati sgusciati", qty: "1 Busta da 500g", note: "Per Wok di gamberi", isSpecific: true },
+                { id: "w2-11", dept: "ortofrutta", name: "Fagiolini freschi", qty: "800g", note: "Per Pollo al limone e Bowl tonno", isSpecific: true },
+                { id: "w2-12", dept: "ortofrutta", name: "Zucca (Delica)", qty: "800g", note: "Per Merluzzo al riso e Gamberi wok", isSpecific: true },
+                { id: "w2-13", dept: "ortofrutta", name: "Broccoli freschi", qty: "800g", note: "Per Salmone piastra e Hamburger tacchino", isSpecific: true },
+                { id: "w2-14", dept: "ortofrutta", name: "Peperoni (Gialli / Rossi)", qty: "800g", note: "Per Diaframma pepe verde e Bocconcini pollo", isSpecific: true },
+                { id: "w2-15", dept: "ortofrutta", name: "Verdure Miste", qty: "600g", note: "Per Straccetti tacchino e Insalata tonno", isSpecific: true }
+            ],
+            3: [
+                { id: "w3-1", dept: "macelleria", name: "Petto di Pollo intero", qty: "600g (2 Persone)", note: "Per Bocconcini Pollo Teriyaki Fit e Curry", isSpecific: true },
+                { id: "w3-2", dept: "macelleria", name: "Diaframma / Manzo magro", qty: "350g (2 Persone)", note: "Per Tagliata di manzo al rosmarino", isSpecific: true },
+                { id: "w3-3", dept: "macelleria", name: "Macinato magro Vitello/Tacchino", qty: "300g macinato", note: "Per Polpettine alle spezie", isSpecific: true },
+                { id: "w3-4", dept: "macelleria", name: "Carne Macinata Magra", qty: "2 Hamburger magri (250g)", note: "Per Hamburger magro con polenta", isSpecific: true },
+                { id: "w3-5", dept: "pescheria", name: "Salmone fresco (Filetti)", qty: "350g (2 Tranci)", note: "Per Salmone al cartoccio", isSpecific: true },
+                { id: "w3-8", dept: "pescheria", name: "Merluzzo / Nasello (Filetti)", qty: "1.000g (1 kg)", note: "Per Risotto gamberi & merluzzo, Merluzzo gratinato e Merluzzo umido", isSpecific: true },
+                { id: "w3-9", dept: "dispensa", name: "Tonno al naturale", qty: "4 Scatolette (320g lordo)", note: "Per Insalata fredda tonno", isSpecific: true },
+                { id: "w3-10", dept: "condimenti", name: "Gamberi surgelati sgusciati", qty: "1 Busta da 500g", note: "Per Gamberi lime zenzero e Risotto", isSpecific: true },
+                { id: "w3-11", dept: "ortofrutta", name: "Broccoli freschi", qty: "800g", note: "Per Pollo Teriyaki e Merluzzo gratinato", isSpecific: true },
+                { id: "w3-12", dept: "ortofrutta", name: "Zucca (Delica)", qty: "800g", note: "Per Tagliata manzo e Pollo curry", isSpecific: true },
+                { id: "w3-13", dept: "ortofrutta", name: "Peperoni (Gialli / Rossi)", qty: "800g", note: "Per Salmone cartoccio ed Hamburger magro", isSpecific: true },
+                { id: "w3-14", dept: "ortofrutta", name: "Fagiolini freschi", qty: "600g", note: "Per Risotto gamberi merluzzo e Merluzzo umido", isSpecific: true },
+                { id: "w3-15", dept: "ortofrutta", name: "Verdure Miste", qty: "600g", note: "Per Polpettine spezie e Penne saraceno", isSpecific: true }
+            ],
+            4: [
+                { id: "w4-1", dept: "macelleria", name: "Petto di Pollo intero", qty: "600g (2 Persone)", note: "Per Pollo ai pomodorini e Straccetti paprika", isSpecific: true },
+                { id: "w4-2", dept: "macelleria", name: "Diaframma di Vitello", qty: "350g (2 Persone)", note: "Per Diaframma all'aceto balsamico", isSpecific: true },
+                { id: "w4-3", dept: "macelleria", name: "Fesa di Tacchino macinata", qty: "300g macinato fresco", note: "Per Polpettine di tacchino", isSpecific: true },
+                { id: "w4-4", dept: "macelleria", name: "Carne Macinata Magra", qty: "2 Hamburger magri (250g)", note: "Per Hamburger magro", isSpecific: true },
+                { id: "w4-5", dept: "pescheria", name: "Salmone fresco (Filetti)", qty: "350g (2 Tranci)", note: "Per Salmone grigliato", isSpecific: true },
+                { id: "w4-8", dept: "pescheria", name: "Merluzzo / Nasello (Filetti)", qty: "1.200g (1,2 kg)", note: "Per Merluzzo crosta mandorle, Merluzzo ortaggi al forno e Penne sughetto merluzzo", isSpecific: true },
+                { id: "w4-9", dept: "dispensa", name: "Tonno al naturale", qty: "4 Scatolette (320g lordo)", note: "Per Insalata tonno e verdure", isSpecific: true },
+                { id: "w4-10", dept: "condimenti", name: "Gamberi surgelati sgusciati", qty: "1 Busta da 500g", note: "Per Spiedini di gamberi", isSpecific: true },
+                { id: "w4-11", dept: "ortofrutta", name: "Fagiolini freschi", qty: "800g", note: "Per Pollo pomodorini e Straccetti paprika", isSpecific: true },
+                { id: "w4-12", dept: "ortofrutta", name: "Zucca (Delica)", qty: "800g", note: "Per Diaframma balsamico e Spiedini", isSpecific: true },
+                { id: "w4-13", dept: "ortofrutta", name: "Peperoni (Gialli / Rossi)", qty: "800g", note: "Per Merluzzo crosta e Penne sughetto merluzzo", isSpecific: true },
+                { id: "w4-14", dept: "ortofrutta", name: "Broccoli freschi", qty: "800g", note: "Per Merluzzo ortaggi al forno ed Hamburger magro", isSpecific: true },
+                { id: "w4-15", dept: "ortofrutta", name: "Verdure Miste", qty: "600g", note: "Per Polpettine tacchino ed Insalata tonno", isSpecific: true }
+            ]
+        };
+
+        const commonItems = [
+            { id: "c-1", dept: "freschi", name: "Yogurt Greco 0% Senza Lattosio", qty: "2 Vasetti da 500g", note: "Per colazioni e bowl" },
+            { id: "c-2", dept: "freschi", name: "Albume d'Uovo liquido", qty: "1 Brik 1kg + 1 Brik 500g", note: "100% pastorizzato" },
+            { id: "c-3", dept: "freschi", name: "Uova fresche Cat. A BIO", qty: "1 Confezione da 10 uova", note: "Codice '0' o '1'" },
+            { id: "c-4", dept: "freschi", name: "Pane Bauletto di Riso (Gluten Free)", qty: "1 Confezione", note: "Per toast salati colazione" },
+            { id: "c-5", dept: "macelleria", name: "Fesa di Tacchino al Forno (Affettato)", qty: "750g (7-8 Vaschette)", note: "Senza nitriti aggiunti" },
+            { id: "c-6", dept: "dispensa", name: "Riso Basmati", qty: "1 Pacco da 1 kg", note: "Per pranzi/cene" },
+            { id: "c-7", dept: "dispensa", name: "Penne di Grano Saraceno", qty: "1 Pacco da 500g", note: "100% grano saraceno" },
+            { id: "c-8", dept: "dispensa", name: "Polenta istantanea di mais", qty: "1 Pacco da 500g", note: "Farina di mais pura" },
+            { id: "c-9", dept: "dispensa", name: "Gallette di Riso Senza Sale", qty: "2 Pacchi (200-300g)", note: "100% riso soffiato" },
+            { id: "c-10", dept: "dispensa", name: "Frutta Secca Mista (Mandorle, Nocciole)", qty: "Sacchetti grandi (300g tot)", note: "Al naturale" },
+            { id: "c-11", dept: "dispensa", name: "Cioccolato Fondente 85-90%", qty: "1 Tavoletta da 100g", note: "Cacao min 85%" },
+            { id: "c-12", dept: "dispensa", name: "Marmellata Hero Solo 0 Zuccheri", qty: "1 Vasetto", note: "Per pancake" },
+            { id: "c-13", dept: "ortofrutta", name: "Patate gialle", qty: "2 Rete (3 kg tot)", note: "Per forno/vapore" },
+            { id: "c-14", dept: "ortofrutta", name: "Frutta Fresca di Stagione", qty: "1,5 - 2,0 kg tot", note: "Pesche/Melone/Arance/Pere/Mirtilli" },
+            { id: "c-15", dept: "ortofrutta", name: "Limoni Biologici & Lime", qty: "2 Rete Limoni BIO + 2 Lime", note: "Per scorza e succo" },
+            { id: "c-16", dept: "ortofrutta", name: "Erbe Fresche & Aglio", qty: "Rosmarino, Timo, Prezzemolo, Aglio", note: "Per marinature" },
+            { id: "c-17", dept: "condimenti", name: "Olio Extra Vergine d'Oliva (EVOO)", qty: "Bottiglia 1 Litro", note: "Estratto a freddo" },
+            { id: "c-18", dept: "condimenti", name: "Burro Chiarificato / Ghee", qty: "1 Vasetto da 200g", note: "Per pancake/toast" }
+        ];
+
+        function setWeek(w) {
+            currentWeek = w;
+            document.getElementById('current-week-num').innerText = w;
+            document.getElementById('banner-title').innerText = `Lista Spesa per la Settimana ${w} (${weekNames[w]})`;
+
+            for(let i=1; i<=4; i++) {
+                const btn = document.getElementById('week-tab-' + i);
+                if (i === w) {
+                    btn.className = "week-tab p-3 rounded-2xl border text-left transition bg-amber-50 dark:bg-amber-950/40 border-amber-500 text-amber-900 dark:text-amber-200 shadow-sm";
+                } else {
+                    btn.className = "week-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50";
+                }
+            }
+            checkedState = JSON.parse(localStorage.getItem('nutriprep_spesa_w' + currentWeek) || '{}');
+            renderList();
+        }
+
+        function renderList() {
+            const container = document.getElementById('shopping-list-container');
+            const specific = weekSpecificItems[currentWeek] || weekSpecificItems[1];
+            const allCurrentItems = [...specific, ...commonItems];
+            
+            const itemsToDisplay = currentFilter === 'all' 
+                ? allCurrentItems 
+                : allCurrentItems.filter(item => item.dept === currentFilter);
+
+            let html = '';
+            itemsToDisplay.forEach(item => {
+                const isChecked = !!checkedState[item.id];
+                const isSpec = !!item.isSpecific;
+
+                html += `
+                    <div onclick="toggleItem('${item.id}')" class="item-card cursor-pointer p-4 rounded-2xl border transition duration-200 flex items-start space-x-3.5 ${isChecked ? 'bg-slate-100 dark:bg-slate-800/60 border-slate-200 dark:border-slate-800 opacity-60' : (isSpec ? 'bg-amber-50/40 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/50 shadow-sm hover:border-amber-400' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700')}">
+                        <div class="checkbox-box w-6 h-6 rounded-lg border-2 flex items-center justify-center text-white mt-0.5 shrink-0 transition ${isChecked ? 'bg-amber-500 border-amber-500' : 'border-slate-300 dark:border-slate-700'}">
+                            <i class="fa-solid fa-check text-xs ${isChecked ? '' : 'opacity-0'}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-slate-900 dark:text-white text-sm ${isChecked ? 'line-through text-slate-500 dark:text-slate-500' : ''}">${item.name}</h4>
+                                ${isSpec ? `<span class="text-[10px] font-extrabold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">Settimana ${currentWeek}</span>` : ''}
+                            </div>
+                            <p class="text-xs text-amber-700 dark:text-amber-400 font-semibold mt-0.5"><i class="fa-solid fa-weight-hanging mr-1 text-slate-400"></i>${item.qty}</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">${item.note}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            updateProgress(allCurrentItems);
+        }
+
+        function toggleItem(id) {
+            checkedState[id] = !checkedState[id];
+            localStorage.setItem('nutriprep_spesa_w' + currentWeek, JSON.stringify(checkedState));
+            renderList();
+        }
+
+        function resetShoppingList() {
+            if (confirm(`Vuoi davvero azzerare le spunte della lista spesa per la Settimana ${currentWeek}?`)) {
+                checkedState = {};
+                localStorage.removeItem('nutriprep_spesa_w' + currentWeek);
+                renderList();
+            }
+        }
+
+        function filterDept(dept) {
+            currentFilter = dept;
+            document.querySelectorAll('.dept-btn').forEach(btn => {
+                btn.className = "dept-btn px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition";
+            });
+            const activeBtn = document.getElementById('btn-' + dept);
+            if (activeBtn) {
+                activeBtn.className = "dept-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 transition shadow-sm";
+            }
+            renderList();
+        }
+
+        function updateProgress(allItems) {
+            const total = allItems.length;
+            const checkedCount = Object.keys(checkedState).filter(k => checkedState[k]).length;
+            const pct = Math.round((checkedCount / total) * 100);
+
+            document.getElementById('progress-text').innerText = `${checkedCount} / ${total} Acquistati (${pct}%)`;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('nutriprep_theme', 'light');
+                updateToggleIcon(false);
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('nutriprep_theme', 'dark');
+                updateToggleIcon(true);
+            }
+        }
+
+        function updateToggleIcon(isDark) {
+            const icon = document.getElementById('theme-toggle-icon');
+            if (icon) {
+                if (isDark) {
+                    icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                } else {
+                    icon.className = 'fa-solid fa-moon text-slate-600 text-base';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateToggleIcon(document.documentElement.classList.contains('dark'));
+            setWeek(1);
+        });
+    </script>
+
+</body>
+</html>
