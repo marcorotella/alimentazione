@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida Meal Prep Domenicale • NutriPrep</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        if (localStorage.getItem('nutriprep_theme') === 'dark' || (!('nutriprep_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Header Navigation -->
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-brand-500/20">
+                            🥗
+                        </div>
+                        <div>
+                            <span class="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">Nutri<span class="text-brand-600">Prep</span></span>
+                            <span class="hidden sm:inline-block text-xs bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-full font-bold ml-2">2 Persone • 4 Settimane</span>
+                        </div>
+                    </a>
+                </div>
+                <nav class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="index.html" class="px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-house mr-1"></i>Home
+                    </a>
+                    <a href="menu.html" class="px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-calendar-week mr-1 text-emerald-500"></i>Menu
+                    </a>
+                    <a href="spesa.html" class="px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-cart-shopping mr-1 text-amber-500"></i>Spesa
+                    </a>
+                    <a href="mealprep.html" class="px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
+                        <i class="fa-solid fa-fire-burner mr-1 text-red-500"></i>Meal Prep
+                    </a>
+                    <a href="agenti.html" class="px-2.5 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i class="fa-solid fa-robot mr-1 text-indigo-500"></i>Agenti AI
+                    </a>
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i id="theme-toggle-icon" class="fa-solid fa-moon text-base"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- Hero Header -->
+        <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+            <div class="max-w-3xl space-y-4 relative z-10">
+                <span class="px-3 py-1 rounded-md bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-wider border border-emerald-500/30">
+                    ⏱️ Batch Cooking Domenicale in 90 Minuti
+                </span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                    Cucina la Domenica, <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">Rilassati tutta la Settimana</span>.
+                </h1>
+                <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+                    Strategia di conservazione sicura e zero sprechi: prepara i primi 3 giorni (Lun-Mer) in frigo e impiega solo 10 minuti di cottura espressa per il pesce e le carni del weekend.
+                </p>
+                <div class="pt-2 flex flex-wrap gap-3 text-xs font-bold">
+                    <span class="px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center">
+                        <i class="fa-solid fa-shield-halved text-emerald-400 mr-1.5"></i> Regola 72h Frigo
+                    </span>
+                    <span class="px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center">
+                        <i class="fa-solid fa-bolt text-amber-400 mr-1.5"></i> Express Prep 10 min
+                    </span>
+                    <span class="px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center">
+                        <i class="fa-solid fa-boxes-packing text-indigo-400 mr-1.5"></i> Dosi A (~1.900 kcal) & B (~1.550 kcal)
+                    </span>
+                </div>
+            </div>
+            <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        </div>
+
+        <!-- 1. Rules of Shelf Life & Preservation -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-md">Sicurezza Alimentare & Freschezza</span>
+                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">La Regola delle 2 Finestre di Conservazione</h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Window 1: Frigo 72h -->
+                <div class="p-6 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800/50 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">
+                            🧊
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Finestra Frigorifero (Lunedì - Mercoledì)</h3>
+                            <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-300">Si prepara al 100% la Domenica</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-2 pt-2">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-emerald-500 mr-2 mt-0.5"></i>
+                            <span><strong>Riso Basmati & Polenta</strong>: Bolliti e stesi la domenica, si mantengono perfetti in frigo a 2-4°C per 4 giorni.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-emerald-500 mr-2 mt-0.5"></i>
+                            <span><strong>Verdure al Forno & Vapore</strong>: Zucca, peperoni, fagiolini e broccoli mantengono consistenza e micronutrienti.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-emerald-500 mr-2 mt-0.5"></i>
+                            <span><strong>Pollo, Tacchino & Polpettine</strong>: Spadellati o al forno, pronti per essere riscaldati in 90 secondi al microonde.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Window 2: Express Prep / Freezer -->
+                <div class="p-6 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800/50 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-lg">
+                            ⚡
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Finestra Express (Giovedì - Sabato)</h3>
+                            <span class="text-xs font-semibold text-amber-700 dark:text-amber-300">Cottura veloce in 10-12 minuti</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-2 pt-2">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-fish text-amber-500 mr-2 mt-0.5"></i>
+                            <span><strong>Pesce Fresco (Merluzzo, Salmone, Gamberi)</strong>: Il pesce cotto scade dopo 48h. Si cuoce in 10 min al forno/padella oppure si congela porzionato.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-drumstick-bite text-amber-500 mr-2 mt-0.5"></i>
+                            <span><strong>Diaframma / Tagliata Manzo</strong>: Cotta espressa in padella (5 min) per evitare che diventi stopposa e perda i succhi.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-box text-amber-500 mr-2 mt-0.5"></i>
+                            <span><strong>Tonno in scatola</strong>: Si apre espresso al momento di comporre l'insalata di patate e verdure.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. The 90-Minute Sunday Timeline Stepper -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 px-2.5 py-1 rounded-md">Timeline Operativa</span>
+                <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">Il Cronoprogramma Domenicale in 5 Fasi (90 Minuti)</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 text-xs">
+                <!-- Step 1 -->
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px]">00-15 MIN</span>
+                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">1. Prep & Taglio</h4>
+                    <p class="text-slate-500 dark:text-slate-400">Zucca a cubetti, peperoni a falde, broccoli in cimette, fagiolini spuntati e patate a spicchi.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px]">15-50 MIN</span>
+                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">2. Infornata Batch</h4>
+                    <p class="text-slate-500 dark:text-slate-400">2 Teglie a 190°C: Teglia 1 (Patate e Zucca) + Teglia 2 (Peperoni e Polpettine tacchino).</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px]">20-45 MIN</span>
+                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">3. Pentole & Vapore</h4>
+                    <p class="text-slate-500 dark:text-slate-400">Bolli Riso Basmati (12 min), Vapore Broccoli & Fagiolini, cuoci e stendi la Polenta su teglia.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px]">50-65 MIN</span>
+                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">4. Spadellata Proteine</h4>
+                    <p class="text-slate-500 dark:text-slate-400">Rosola in padella antiaderente i bocconcini di Pollo/Tacchino con le spezie della settimana.</p>
+                </div>
+                <!-- Step 5 -->
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-600 text-white font-extrabold text-[10px]">65-90 MIN</span>
+                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">5. Impiattamento A/B</h4>
+                    <p class="text-slate-500 dark:text-slate-400">Pesa nei contenitori di vetro le dosi per Persona A (~1.900 kcal) e Persona B (~1.550 kcal).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Week-by-Week Batch Cooking Strategy Tabs -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/50 px-2.5 py-1 rounded-md">Applicazione Pratica</span>
+                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">Cosa Cucinare la Domenica Settimana per Settimana</h2>
+                </div>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button onclick="showPrepWeek(1)" id="prep-tab-1" class="prep-tab p-3 rounded-2xl border text-left transition bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200 shadow-sm">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">Settimana 1</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Gusto Mediterraneo</span>
+                </button>
+                <button onclick="showPrepWeek(2)" id="prep-tab-2" class="prep-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Settimana 2</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Erbe & Agrumi</span>
+                </button>
+                <button onclick="showPrepWeek(3)" id="prep-tab-3" class="prep-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Settimana 3</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Fusion Fit</span>
+                </button>
+                <button onclick="showPrepWeek(4)" id="prep-tab-4" class="prep-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Settimana 4</span>
+                    <span class="font-bold text-xs sm:text-sm block truncate">Rustico & Gourmet</span>
+                </button>
+            </div>
+
+            <!-- Prep Details Container -->
+            <div id="prep-details-container" class="space-y-6">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- 4. Reheating & Regeneration Tips -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 px-2.5 py-1 rounded-md">Trucchi dello Chef</span>
+                <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">Rigenerare il Cibo: Gusto Come Appena Cotto</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                    <div class="text-amber-500 font-bold text-base flex items-center">
+                        <i class="fa-solid fa-bowl-rice mr-2"></i> Riso Basmati Morbido
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Prima di scaldare in microonde, aggiungi <strong>1 cucchiaio d'acqua</strong> nel contenitore e appoggia il coperchio non sigillato. Il vapore renderà il riso soffice e fragrante come appena bollito.
+                    </p>
+                </div>
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                    <div class="text-amber-500 font-bold text-base flex items-center">
+                        <i class="fa-solid fa-cubes mr-2"></i> Polenta Croccante
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Stendi la polenta su una teglia la domenica. Quando è fredda, tagliala a cubetti o rettangoli. Piastrali 3 minuti per lato in padella antiaderente per una crosticina deliziosa!
+                    </p>
+                </div>
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-2">
+                    <div class="text-amber-500 font-bold text-base flex items-center">
+                        <i class="fa-solid fa-lemon mr-2"></i> Condimento Express
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Non aggiungere limone o aceto nelle verdure in frigo: l'acido ingiallisce e rende molli le foglie. Aggiungi il limone ed il filo di Olio EVO <strong>solo prima di servire</strong>.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 dark:text-slate-400 space-y-2">
+            <p class="font-bold text-slate-700 dark:text-slate-300">NutriPrep • Guida al Meal Prep Domenicale per 2 Persone</p>
+            <p>Calibrato su Persona A (~1.900 kcal) e Persona B (~1.550 kcal). Conservazione sicura e zero sprechi.</p>
+        </div>
+    </footer>
+
+    <!-- Script -->
+    <script>
+        const prepData = {
+            1: {
+                name: "Gusto Mediterraneo & Spezie Orientali",
+                sundayCook: [
+                    "<strong>Chicken Tikka Masala</strong>: Cuoci il pollo marinato in padella; unisci al riso ed ai peperoni arrostiti.",
+                    "<strong>Straccetti Pollo Curry</strong>: Spadella il pollo al curry e dividi nelle vaschette con patate e peperoni.",
+                    "<strong>Polpettine Tacchino</strong>: Inforna a 190°C per 20 min insieme alla teglia delle verdure.",
+                    "<strong>Merluzzo al Sughetto</strong>: Cuoci il merluzzo stufato al pomodoro per la cena di Martedì.",
+                    "<strong>Basi Carboidrati</strong>: Bolli 360g Basmati (per 3-4 cene/pranzi), cuoci 100g polenta e cuoci 1,2kg patate al forno."
+                ],
+                expressCook: [
+                    "<strong>Giovedì Pranzo (Spiedini Gamberi)</strong>: Spadella i gamberi 5 min con limone; servili con il riso e broccoli pronti dal frigo.",
+                    "<strong>Venerdì Cena (Merluzzo Crosta Erbe)</strong>: Inforna i filetti freschi con erbe per 12 min a 180°C.",
+                    "<strong>Sabato Pranzo (Insalata Tonno)</strong>: Apri le scatolette di tonno ed unisci alle patate lesse e verdure miste del frigo."
+                ]
+            },
+            2: {
+                name: "Erbe Aromatiche & Profumi d'Agrumi",
+                sundayCook: [
+                    "<strong>Pollo al Limone ed Erbe</strong>: Spadella i bocconcini di pollo e porzionali con patate e fagiolini.",
+                    "<strong>Straccetti Tacchino</strong>: Rosola il tacchino ed unisci al riso basmati e verdure miste.",
+                    "<strong>Hamburger Tacchino</strong>: Cuoci sulla piastra ed unisci ai broccoli ed alla polenta.",
+                    "<strong>Merluzzo alla Piastra</strong>: Cuoci il merluzzo per la cena di Lunedì con riso e zucca al forno.",
+                    "<strong>Basi Carboidrati</strong>: Riso Basmati bollito + Polenta a rettangoli + Patate lesse/forno."
+                ],
+                expressCook: [
+                    "<strong>Giovedì Pranzo (Wok Gamberi)</strong>: Salta i gamberi 5 min nel wok con soia e lime; unisci a riso e zucca pronti.",
+                    "<strong>Venerdì Cena (Bowl Tonno)</strong>: Scalda il riso, unisci fagiolini e apri le scatolette di tonno al naturale.",
+                    "<strong>Sabato Pranzo (Insalata Tonno e Patate)</strong>: Componi in 3 minuti con le patate dal frigo."
+                ]
+            },
+            3: {
+                name: "Fusion Fit & Sapori Intensi",
+                sundayCook: [
+                    "<strong>Pollo Teriyaki Fit</strong>: Bocconcini di pollo rosolati con salsa teriyaki fit, riso e broccoli.",
+                    "<strong>Polpettine alle Spezie</strong>: Cuoci in forno a 190°C per 20 min; proponile con polenta e verdure miste.",
+                    "<strong>Straccetti Pollo Curry</strong>: Cuoci con zucca a cubetti e riso basmati.",
+                    "<strong>Merluzzo Stufato</strong>: Per il risotto basmati con gamberi e merluzzo di Mercoledì cena.",
+                    "<strong>Basi Carboidrati</strong>: Riso Basmati (4 giorni) + Zucca al forno + Patate."
+                ],
+                expressCook: [
+                    "<strong>Martedì Pranzo (Gamberi Lime Zenzero)</strong>: Salta i gamberi 6 min in padella con lime e zenzero.",
+                    "<strong>Martedì/Venerdì Cena (Salmone Cartoccio)</strong>: Inforna i tranci di salmone 15 min a 180°C con le patate lesse.",
+                    "<strong>Giovedì Cena (Merluzzo Gratinato)</strong>: Filetto di merluzzo al forno per 12 min."
+                ]
+            },
+            4: {
+                name: "Rustico & Gourmet Fit",
+                sundayCook: [
+                    "<strong>Pollo ai Pomodorini e Timo</strong>: Spadella il pollo con pomodorini freschi, timo ed origano; porziona con riso e fagiolini.",
+                    "<strong>Polpettine Tacchino</strong>: Inforna 20 min e servile con patate e verdure miste.",
+                    "<strong>Straccetti Pollo Paprika</strong>: Rosola in padella con patate al forno e fagiolini.",
+                    "<strong>Basi Carboidrati</strong>: Riso Basmati + Polenta a cubetti + Patate al forno + Zucca al forno."
+                ],
+                expressCook: [
+                    "<strong>Martedì Pranzo (Merluzzo Crosta Mandorle)</strong>: Metti il merluzzo con granella di mandorle per 12 min in forno a 190°C.",
+                    "<strong>Mercoledì Cena (Salmone Grigliato)</strong>: Cuoci il salmone 8 min in padella antiaderente.",
+                    "<strong>Venerdì Pranzo (Hamburger Magro)</strong>: Piastra 6 min l'hamburger magro al momento."
+                ]
+            }
+        };
+
+        function showPrepWeek(w) {
+            for(let i=1; i<=4; i++) {
+                const btn = document.getElementById('prep-tab-' + i);
+                if (i === w) {
+                    btn.className = "prep-tab p-3 rounded-2xl border text-left transition bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200 shadow-sm";
+                } else {
+                    btn.className = "prep-tab p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50";
+                }
+            }
+
+            const data = prepData[w];
+            const container = document.getElementById('prep-details-container');
+
+            let html = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Sunday Session -->
+                    <div class="p-6 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-extrabold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/60 px-3 py-1 rounded-full">
+                                🍳 Sessione Domenica (Lun - Mer)
+                            </span>
+                            <span class="text-xs font-bold text-slate-400">Frigo 72 ore</span>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">${data.name}</h3>
+                        <ul class="text-xs text-slate-700 dark:text-slate-200 space-y-2.5 pt-2">
+            `;
+
+            data.sundayCook.forEach(item => {
+                html += `
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mr-2 mt-0.5"></i>
+                        <div>${item}</div>
+                    </li>
+                `;
+            });
+
+            html += `
+                        </ul>
+                    </div>
+
+                    <!-- Express Session -->
+                    <div class="p-6 rounded-2xl bg-amber-50/50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-extrabold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/60 px-3 py-1 rounded-full">
+                                ⚡ Cottura Espressa 10 min (Gio - Sab)
+                            </span>
+                            <span class="text-xs font-bold text-slate-400">Freschezza Garantita</span>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Preparazioni Mid-Week</h3>
+                        <ul class="text-xs text-slate-700 dark:text-slate-200 space-y-2.5 pt-2">
+            `;
+
+            data.expressCook.forEach(item => {
+                html += `
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-bolt text-amber-500 mr-2 mt-0.5"></i>
+                        <div>${item}</div>
+                    </li>
+                `;
+            });
+
+            html += `
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('nutriprep_theme', 'light');
+                updateToggleIcon(false);
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('nutriprep_theme', 'dark');
+                updateToggleIcon(true);
+            }
+        }
+
+        function updateToggleIcon(isDark) {
+            const icon = document.getElementById('theme-toggle-icon');
+            if (icon) {
+                if (isDark) {
+                    icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                } else {
+                    icon.className = 'fa-solid fa-moon text-slate-600 text-base';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateToggleIcon(document.documentElement.classList.contains('dark'));
+            showPrepWeek(1);
+        });
+    </script>
+</body>
+</html>
